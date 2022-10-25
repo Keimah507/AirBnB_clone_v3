@@ -67,6 +67,24 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+    def test_get_pace(self):
+        """Checks if get() function returns properly"""
+        duplicate = DBStorage.get('Place', self.p1.id)
+        expected = self.p1.id
+        self.assertEqual(expected, duplicate.id)
+
+    def test_count_amenity(self):
+        """Checks if count() returns a proper count with class input"""
+        count_amenity = DBStorage.count('Amenity')
+        expected = 3
+        self.assertEqual(expected, count_amenity)
+
+    def test_count_all(self):
+        """Checks if count() functions without class input"""
+        count_all = DBStorage.count()
+        expected = 8
+        self.assertEqual(expected, count_all)
+
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""

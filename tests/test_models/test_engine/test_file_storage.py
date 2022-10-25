@@ -19,9 +19,9 @@ import os
 import pep8
 import unittest
 FileStorage = file_storage.FileStorage
+storage = models.storage
 classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
            "Place": Place, "Review": Review, "State": State, "User": User}
-
 
 class TestFileStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of FileStorage class"""
@@ -66,7 +66,6 @@ test_file_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
-
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
@@ -113,3 +112,23 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count_cls(self):
+        """checks count method with class input arg"""
+        count_user = storage.count('User')
+        expected = 1
+        self.assertEqual(expected, count_user)
+
+    def test_count_all(self):
+        """Checks the count method with no class input"""
+        count_all = storage.count()
+        expected = 7
+        self.assertEqual(expected, count_all)
+    
+    def test_get_cls_id(self):
+        """Checks get method with class and id inputs"""
+        duplicate = storage.get('User', self.User.id)
+        expected = self.User.id
+        actual = duplicate.id
+        self.assertEqual(expected, actual)
